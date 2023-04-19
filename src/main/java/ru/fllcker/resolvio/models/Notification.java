@@ -18,6 +18,7 @@ public class Notification {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Builder.Default
     private LocalDateTime createdTime = LocalDateTime.now();
 
     private String text;

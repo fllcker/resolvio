@@ -20,6 +20,7 @@ public class Score {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Builder.Default
     private LocalDateTime createdTime = LocalDateTime.now();
 
     @Enumerated(value = EnumType.STRING)

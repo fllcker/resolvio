@@ -20,6 +20,7 @@ public class Answer {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Builder.Default
     private LocalDateTime createdTime = LocalDateTime.now();
 
     private String body;
