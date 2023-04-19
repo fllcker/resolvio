@@ -27,6 +27,9 @@ public class User {
 
     private String name;
 
+    @OneToMany(mappedBy = "user")
+    @JsonBackReference
+    private List<Token> tokens;
 
     @OneToMany(mappedBy = "creator")
     @JsonBackReference

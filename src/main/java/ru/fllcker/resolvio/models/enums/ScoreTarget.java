@@ -1,4 +1,4 @@
-package ru.fllcker.resolvio.models;
+package ru.fllcker.resolvio.models.enums;
 
 public enum ScoreTarget {
     QUESTION,

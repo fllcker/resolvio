@@ -3,6 +3,8 @@ package ru.fllcker.resolvio.models;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
+import ru.fllcker.resolvio.models.enums.ScoreTarget;
+import ru.fllcker.resolvio.models.enums.ScoreType;
 
 import java.time.LocalDateTime;
 
