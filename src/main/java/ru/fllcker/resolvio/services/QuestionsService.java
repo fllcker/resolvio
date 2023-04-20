@@ -5,10 +5,14 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
+import ru.fllcker.resolvio.comparators.QuestionsComparator;
 import ru.fllcker.resolvio.dto.NewQuestionDto;
 import ru.fllcker.resolvio.models.Question;
 import ru.fllcker.resolvio.models.User;
 import ru.fllcker.resolvio.repositories.IQuestionsRepository;
+
+import java.util.Collections;
+import java.util.List;
 
 @Service
 @Transactional
@@ -42,5 +46,16 @@ public class QuestionsService {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "No access!");
 
         questionsRepository.deleteById(id);
+    }
+
+    public List<Question> searchQuestions(List<String> keywords) {
+        if (keywords.size() < 1)
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Wrong keywords!");
+
+        String keyword = keywords.get(0);
+        List<Question> questions = questionsRepository.findByTitleContainingIgnoreCaseOrDescriptionContainingIgnoreCase(keyword, keyword);
+        questions.sort(new QuestionsComparator(keywords));
+
+        return questions;
     }
 }
