@@ -2,6 +2,7 @@ package ru.fllcker.resolvio.services;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -11,13 +12,13 @@ import ru.fllcker.resolvio.models.Question;
 import ru.fllcker.resolvio.models.User;
 import ru.fllcker.resolvio.repositories.IQuestionsRepository;
 
-import java.util.Collections;
 import java.util.List;
 
 @Service
 @Transactional
 @RequiredArgsConstructor
 public class QuestionsService {
+    private final RedisTemplate<String, List<Question>> redisTemplate;
     private final IQuestionsRepository questionsRepository;
     private final UsersService usersService;
 
@@ -49,12 +50,16 @@ public class QuestionsService {
     }
 
     public List<Question> searchQuestions(List<String> keywords) {
-        if (keywords.size() < 1)
+        if (keywords == null || keywords.isEmpty())
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Wrong keywords!");
 
-        String keyword = keywords.get(0);
-        List<Question> questions = questionsRepository.findByTitleContainingIgnoreCaseOrDescriptionContainingIgnoreCase(keyword, keyword);
-        questions.sort(new QuestionsComparator(keywords));
+        String redisKey = "questions:" + String.join(",", keywords);
+        List<Question> questions = redisTemplate.opsForValue().get(redisKey);
+        if (questions == null) {
+            questions = questionsRepository.findByTitleContainingIgnoreCaseOrDescriptionContainingIgnoreCase(keywords.get(0), keywords.get(0));
+            questions.sort(new QuestionsComparator(keywords));
+            redisTemplate.opsForValue().set(redisKey, questions);
+        }
 
         return questions;
     }

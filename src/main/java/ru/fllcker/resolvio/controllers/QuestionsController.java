@@ -43,8 +43,8 @@ public class QuestionsController {
         return ResponseEntity.ok().build();
     }
 
-    @GetMapping("search")
-    public ResponseEntity<List<Question>> searchQuestions(SearchQuestionsDto searchQuestionsDto) {
+    @PostMapping("search")
+    public ResponseEntity<List<Question>> searchQuestions(@RequestBody SearchQuestionsDto searchQuestionsDto) {
         var result = questionsService.searchQuestions(searchQuestionsDto.getKeywords());
         return ResponseEntity.ok(result);
     }

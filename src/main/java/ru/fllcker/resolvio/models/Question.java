@@ -31,7 +31,7 @@ public class Question {
     @Builder.Default
     private Boolean active = true;
 
-    @ManyToOne
+    @ManyToOne()
     @JoinColumn(name = "creator_id", referencedColumnName = "id")
     @JsonManagedReference
     private User creator;
