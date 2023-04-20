@@ -12,6 +12,7 @@ import ru.fllcker.resolvio.models.Question;
 import ru.fllcker.resolvio.models.User;
 import ru.fllcker.resolvio.repositories.IQuestionsRepository;
 
+import java.time.Duration;
 import java.util.List;
 
 @Service
@@ -58,7 +59,7 @@ public class QuestionsService {
         if (questions == null) {
             questions = questionsRepository.findByTitleContainingIgnoreCaseOrDescriptionContainingIgnoreCase(keywords.get(0), keywords.get(0));
             questions.sort(new QuestionsComparator(keywords));
-            redisTemplate.opsForValue().set(redisKey, questions);
+            redisTemplate.opsForValue().set(redisKey, questions, Duration.ofMinutes(15));
         }
 
         return questions;
