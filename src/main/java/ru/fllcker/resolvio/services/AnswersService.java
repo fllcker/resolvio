@@ -2,10 +2,13 @@ package ru.fllcker.resolvio.services;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 import ru.fllcker.resolvio.dto.NewAnswerDto;
+import ru.fllcker.resolvio.events.AnswerCreatedEvent;
+import ru.fllcker.resolvio.events.AnswerDeletedByQuestionCreatorEvent;
 import ru.fllcker.resolvio.models.Answer;
 import ru.fllcker.resolvio.models.Question;
 import ru.fllcker.resolvio.models.User;
@@ -15,6 +18,7 @@ import ru.fllcker.resolvio.repositories.IAnswersRepository;
 @Transactional
 @RequiredArgsConstructor
 public class AnswersService {
+    private ApplicationEventPublisher eventPublisher;
     private final IAnswersRepository answersRepository;
     private final UsersService usersService;
     private final QuestionsService questionsService;
@@ -33,7 +37,7 @@ public class AnswersService {
                 .build();
 
         answersRepository.save(answer);
-        // AnswerCreatedEvent
+        eventPublisher.publishEvent(new AnswerCreatedEvent(answer));
         return answer;
     }
 
@@ -53,8 +57,7 @@ public class AnswersService {
 
         if (answer.getQuestion().getCreator().equals(user) && !answer.getCreator().equals(user)) {
             // when answer deleted by question creator (not answer creator)
-
-            // AnswerDeletedByQuestionCreatorEvent
+            eventPublisher.publishEvent(new AnswerDeletedByQuestionCreatorEvent(answer));
         }
     }
 }
