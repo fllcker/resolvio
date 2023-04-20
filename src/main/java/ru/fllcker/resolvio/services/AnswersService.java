@@ -18,7 +18,7 @@ import ru.fllcker.resolvio.repositories.IAnswersRepository;
 @Transactional
 @RequiredArgsConstructor
 public class AnswersService {
-    private ApplicationEventPublisher eventPublisher;
+    private final ApplicationEventPublisher eventPublisher;
     private final IAnswersRepository answersRepository;
     private final UsersService usersService;
     private final QuestionsService questionsService;

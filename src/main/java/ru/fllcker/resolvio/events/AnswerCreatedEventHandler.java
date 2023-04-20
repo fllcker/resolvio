@@ -2,6 +2,7 @@ package ru.fllcker.resolvio.events;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.event.EventListener;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Component;
 import ru.fllcker.resolvio.models.Notification;
 import ru.fllcker.resolvio.models.Question;
@@ -12,6 +13,7 @@ import ru.fllcker.resolvio.services.NotificationsService;
 @RequiredArgsConstructor
 public class AnswerCreatedEventHandler {
     private final NotificationsService notificationsService;
+    private final SimpMessagingTemplate messagingTemplate;
 
     @EventListener
     public void handleAnswerCreatedEvent(AnswerCreatedEvent event) {
@@ -27,5 +29,6 @@ public class AnswerCreatedEventHandler {
         notificationsService.save(notification);
 
         // ws send
+        messagingTemplate.convertAndSend("/topic/question-" + question.getId(), notification.getText());
     }
 }
