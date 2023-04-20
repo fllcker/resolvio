@@ -28,6 +28,9 @@ public class Question {
 
     private String description;
 
+    @Builder.Default
+    private Boolean active = true;
+
     @ManyToOne
     @JoinColumn(name = "creator_id", referencedColumnName = "id")
     @JsonManagedReference

@@ -26,7 +26,8 @@ public class QuestionsService {
                 .creator(creator)
                 .build();
 
-        return questionsRepository.save(question);
+        questionsRepository.save(question);
+        return question;
     }
 
     public Question findById(Long id) {
