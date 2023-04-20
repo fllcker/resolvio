@@ -1,6 +1,7 @@
 package ru.fllcker.resolvio;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import lombok.NonNull;
 import org.springframework.boot.SpringApplication;
@@ -20,6 +21,7 @@ public class ResolvioApplication {
 	public ObjectMapper objectMapper() {
 		var objectMapper = new ObjectMapper();
 		objectMapper.registerModule(new JavaTimeModule());
+		objectMapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
 		return objectMapper;
 	}
 
