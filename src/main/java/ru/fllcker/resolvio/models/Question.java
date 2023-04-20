@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.Cascade;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -34,9 +35,11 @@ public class Question {
 
     @OneToMany(mappedBy = "question")
     @JsonBackReference
+    @Cascade(org.hibernate.annotations.CascadeType.DELETE)
     private List<Answer> answers;
 
     @OneToMany(mappedBy = "question")
     @JsonBackReference
+    @Cascade(org.hibernate.annotations.CascadeType.DELETE)
     private List<Score> scores;
 }
